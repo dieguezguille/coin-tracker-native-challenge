@@ -1,19 +1,26 @@
 import { StyleSheet } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
-import ApiKeyInput from "@/components/ApiKeyInput";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
+import { useLocalSearchParams } from "expo-router";
+import { ThemedText } from "@/components/ThemedText";
 
-export default function ConfigScreen() {
+export default function AssetChartScreen() {
+  const router = useLocalSearchParams();
+  const { id } = router;
+
+  console.log("AssetChartScreen", id);
+
   return (
     <ThemedView style={styles.layout}>
       <LinearGradient
         colors={[AppColors.primary.dark, Colors.dark.background]}
         style={styles.background}
       />
-
-      <ApiKeyInput />
+      <ThemedView>
+        <ThemedText>Asset chart for {id}</ThemedText>
+      </ThemedView>
     </ThemedView>
   );
 }
@@ -31,15 +38,5 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-  },
-  headerImage: {
-    color: "#808080",
-    bottom: -90,
-    left: -35,
-    position: "absolute",
-  },
-  configsContainer: {
-    flexDirection: "row",
-    gap: 8,
   },
 });

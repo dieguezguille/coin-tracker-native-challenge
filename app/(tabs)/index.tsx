@@ -1,81 +1,111 @@
-import React from "react";
-import { Image, StyleSheet, ScrollView } from "react-native";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
+import React, { useEffect } from "react";
+import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-
-const assets = [
-  { name: "Bitcoin", symbol: "BTC", price: "$35,000", change: "+2.5%" },
-  { name: "Ethereum", symbol: "ETH", price: "$2,500", change: "+1.8%" },
-  { name: "Cardano", symbol: "ADA", price: "$1.20", change: "-0.5%" },
-  { name: "Solana", symbol: "SOL", price: "$150", change: "+3.0%" },
-  { name: "Polkadot", symbol: "DOT", price: "$40", change: "+4.2%" },
-];
+import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGecko";
+import { LinearGradient } from "expo-linear-gradient";
+import { AppColors, Colors } from "@/constants/Colors";
+import { Link } from "expo-router";
+import intlNumberFormat from "@/utils/lib/intlNumberFormat";
 
 export default function AssetsScreen() {
   const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
+  const { data: assets, refetch } = useGetAssetsWithMarketDataQuery({});
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  useEffect(() => {
+    refetch();
+  }, [apiKeyValue]);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
+    <ThemedView style={styles.layout}>
+      <LinearGradient
+        colors={[AppColors.primary.dark, Colors.dark.background]}
+        style={styles.background}
+      />
+
       <ThemedView style={styles.assetsContainer}>
-        <ThemedText style={styles.assetsTitle}>
-          {apiKeyValue ? "API Key is set!" : "API Key is not set!"}
-        </ThemedText>
-        <ThemedText style={styles.assetsTitle}>Top 5 Assets</ThemedText>
-        <ScrollView>
-          {assets.map((asset, index) => (
-            <ThemedView key={index} style={styles.assetRow}>
-              <ThemedText style={styles.assetName}>
-                {asset.name} ({asset.symbol})
-              </ThemedText>
-              <ThemedText style={styles.assetPrice}>{asset.price}</ThemedText>
-              <ThemedText
-                style={[
-                  styles.assetChange,
-                  asset.change.startsWith("+")
-                    ? styles.positiveChange
-                    : styles.negativeChange,
-                ]}
-              >
-                {asset.change}
-              </ThemedText>
-            </ThemedView>
+        <ThemedView style={styles.assetRowHeader}>
+          <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
+          <ThemedText style={styles.assetMCapHeaderText}>Market Cap</ThemedText>
+          <ThemedText style={styles.assetPriceHeaderText}>Price</ThemedText>
+        </ThemedView>
+
+        <ScrollView style={styles.assetScrollView}>
+          {assets?.map((asset) => (
+            <Link
+              key={asset.id}
+              href={{
+                pathname: "charts",
+                params: { id: asset.id },
+              }}
+              asChild
+            >
+              <TouchableOpacity key={asset.id} style={styles.assetRow}>
+                <ThemedText style={styles.assetName}>{asset.name}</ThemedText>
+                <ThemedText style={styles.assetMcap}>
+                  {intlNumberFormat(asset.market_cap)}
+                </ThemedText>
+                <ThemedText style={styles.assetPrice}>
+                  ${asset.current_price}
+                </ThemedText>
+              </TouchableOpacity>
+            </Link>
           ))}
         </ScrollView>
+        {!apiKeyValue && (
+          <ThemedText style={styles.apiKeyMissing}>
+            API Key is not set!
+          </ThemedText>
+        )}
       </ThemedView>
-    </ParallaxScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
+  layout: {
+    backgroundColor: "transparent",
+    padding: 20,
+    paddingTop: 40,
+    flex: 1,
+  },
+  background: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
   assetsContainer: {
-    marginVertical: 20,
-    paddingHorizontal: 20,
+    marginVertical: "5%",
+    paddingHorizontal: "5%",
+  },
+  assetScrollView: {
+    width: "100%",
+    height: "100%",
+  },
+  apiKeyMissing: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+    textAlign: "center",
+    color: "red",
   },
   assetsTitle: {
     fontSize: 24,
@@ -83,26 +113,53 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
   },
+  assetRowHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomColor: AppColors.secondary.light,
+    borderBottomWidth: 1,
+  },
   assetRow: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: AppColors.secondary.light,
+    borderBottomWidth: 0.5,
+  },
+  assetNameHeaderText: {
+    flex: 2,
+    fontWeight: "bold",
+    fontSize: 18,
+    textAlign: "left",
+  },
+  assetMCapHeaderText: {
+    flex: 3,
+    fontWeight: "bold",
+    fontSize: 18,
+    textAlign: "left",
+  },
+  assetPriceHeaderText: {
+    flex: 2,
+    fontWeight: "bold",
+    fontSize: 18,
+    textAlign: "right",
   },
   assetName: {
+    flex: 2,
     fontSize: 18,
+    textAlign: "left",
+  },
+  assetMcap: {
+    flex: 3,
+    fontSize: 18,
+    textAlign: "left",
   },
   assetPrice: {
+    flex: 2,
     fontSize: 18,
-  },
-  assetChange: {
-    fontSize: 18,
-  },
-  positiveChange: {
-    color: "green",
-  },
-  negativeChange: {
-    color: "red",
+    textAlign: "right",
   },
 });

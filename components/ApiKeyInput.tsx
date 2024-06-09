@@ -3,6 +3,7 @@ import { RootState } from "@/store/store";
 import React, { useEffect, useState } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { ThemedText } from "./ThemedText";
 
 const ApiKeyInput: React.FC = () => {
   const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
@@ -22,6 +23,8 @@ const ApiKeyInput: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <ThemedText style={styles.inputLabel}>CoinGecko API Key</ThemedText>
+
       <TextInput
         style={styles.input}
         focusable
@@ -40,7 +43,12 @@ const ApiKeyInput: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    gap: 20,
+    gap: 10,
+  },
+  inputLabel: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   input: {
     borderColor: "#ccc",
