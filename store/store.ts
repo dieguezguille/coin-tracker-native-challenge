@@ -11,6 +11,8 @@ import {
   persistReducer,
   persistStore,
 } from "redux-persist";
+import { coinGeckoApi } from "@/features/coin-gecko/services/coinGecko";
+import { setupListeners } from "@reduxjs/toolkit/query";
 
 const persistCoinGeckoConfig = {
   key: "coinGecko",
@@ -24,6 +26,7 @@ const persistedCoinGeckoReducer = persistReducer(
 
 export const store = configureStore({
   reducer: {
+    [coinGeckoApi.reducerPath]: coinGeckoApi.reducer,
     coinGecko: persistedCoinGeckoReducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -31,8 +34,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(coinGeckoApi.middleware),
 });
+
+setupListeners(store.dispatch);
 
 export const persistor = persistStore(store);
 
