@@ -10,14 +10,13 @@ export default function TabLayout() {
 
   return (
     <Tabs
-      initialRouteName="assets"
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
       }}
     >
       <Tabs.Screen
-        name="assets"
+        name="index"
         options={{
           title: "Assets",
           tabBarIcon: ({ color, focused }) => (
@@ -35,6 +34,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "stats-chart" : "stats-chart-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="config"
+        options={{
+          title: "Config",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "settings" : "settings-outline"}
               color={color}
             />
           ),
