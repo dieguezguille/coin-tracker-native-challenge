@@ -11,7 +11,7 @@ import {
   persistReducer,
   persistStore,
 } from "redux-persist";
-import { coinGeckoApi } from "@/features/coin-gecko/services/coinGecko";
+import { coinGeckoApi } from "@/features/coin-gecko/services/coinGeckoApi";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
 const persistCoinGeckoConfig = {

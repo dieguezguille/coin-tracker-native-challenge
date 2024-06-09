@@ -30,12 +30,25 @@ export interface CoinGeckoAsset {
   price_change_percentage_1h: number;
 }
 
-export interface GetAssetsWithMarketDataParams {
+export interface GetAssetsWithMarketData {
   page?: number;
   perPage?: number;
   currency?: string;
   orderBy?: string;
   precision?: number;
+}
+
+export interface CoinGeckoAssetChartData {
+  prices: Array<Array<number>>;
+  market_caps: Array<Array<number>>;
+  total_volumes: Array<Array<number>>;
+}
+
+export interface GetAssetWithMarketDataByIdParams {
+  id: string;
+  currency?: string;
+  startAt?: number;
+  endAt?: number;
 }
 
 export const coinGeckoApi = createApi({
@@ -46,7 +59,7 @@ export const coinGeckoApi = createApi({
   endpoints: (builder) => ({
     getAssetsWithMarketData: builder.query<
       Array<CoinGeckoAsset>,
-      GetAssetsWithMarketDataParams
+      GetAssetsWithMarketData
     >({
       query: ({
         page = 1,
@@ -57,7 +70,15 @@ export const coinGeckoApi = createApi({
       }) =>
         `coins/markets?order=${orderBy}&per_page=${perPage}&precision=${precision}&vs_currency=${currency}&page=${page}`,
     }),
+    getAssetDataById: builder.query<
+      CoinGeckoAssetChartData,
+      GetAssetWithMarketDataByIdParams
+    >({
+      query: ({ id, currency, startAt, endAt }) =>
+        `coins/${id}/market_chart/range?vs_currency=${currency}&from=${startAt}&to=${endAt}`,
+    }),
   }),
 });
 
-export const { useGetAssetsWithMarketDataQuery } = coinGeckoApi;
+export const { useGetAssetsWithMarketDataQuery, useGetAssetDataByIdQuery } =
+  coinGeckoApi;

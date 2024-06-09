@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     gap: 10,
+    marginTop: 20,
   },
   inputLabel: {
     color: "#fff",

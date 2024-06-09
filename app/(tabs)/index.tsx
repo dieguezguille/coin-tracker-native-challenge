@@ -1,10 +1,17 @@
 import React, { useEffect } from "react";
-import { StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  RefreshControl,
+} from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGecko";
+import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGeckoApi";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
@@ -12,7 +19,12 @@ import intlNumberFormat from "@/utils/lib/intlNumberFormat";
 
 export default function AssetsScreen() {
   const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
-  const { data: assets, refetch } = useGetAssetsWithMarketDataQuery({});
+  const {
+    data: assets,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetAssetsWithMarketDataQuery({});
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,6 +45,10 @@ export default function AssetsScreen() {
         style={styles.background}
       />
 
+      <ThemedText style={styles.appTitle}>
+        Coin Tracker Native Challenge
+      </ThemedText>
+
       <ThemedView style={styles.assetsContainer}>
         <ThemedView style={styles.assetRowHeader}>
           <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
@@ -40,18 +56,39 @@ export default function AssetsScreen() {
           <ThemedText style={styles.assetPriceHeaderText}>Price</ThemedText>
         </ThemedView>
 
-        <ScrollView style={styles.assetScrollView}>
+        {isLoading && <ActivityIndicator size="large" />}
+
+        <ScrollView
+          style={styles.assetScrollView}
+          refreshControl={
+            <RefreshControl refreshing={isLoading} onRefresh={refetch} />
+          }
+        >
           {assets?.map((asset) => (
             <Link
               key={asset.id}
               href={{
                 pathname: "charts",
-                params: { id: asset.id },
+                params: {
+                  id: asset.id,
+                  name: asset.name,
+                  symbol: asset.symbol,
+                  mcap: asset.market_cap,
+                  price: asset.current_price,
+                  change: asset.price_change_percentage_24h,
+                  image: asset.image,
+                },
               }}
               asChild
             >
               <TouchableOpacity key={asset.id} style={styles.assetRow}>
-                <ThemedText style={styles.assetName}>{asset.name}</ThemedText>
+                <ThemedView style={styles.assetName}>
+                  <Image
+                    source={{ uri: asset.image }}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <ThemedText>{asset.name}</ThemedText>
+                </ThemedView>
                 <ThemedText style={styles.assetMcap}>
                   {intlNumberFormat(asset.market_cap)}
                 </ThemedText>
@@ -62,11 +99,34 @@ export default function AssetsScreen() {
             </Link>
           ))}
         </ScrollView>
-        {!apiKeyValue && (
-          <ThemedText style={styles.apiKeyMissing}>
-            API Key is not set!
-          </ThemedText>
-        )}
+
+        <ThemedView
+          style={{
+            marginVertical: isLoading || isError ? 20 : 0,
+            alignItems: "center",
+          }}
+        >
+          {isLoading ? (
+            <ActivityIndicator size="large" color={AppColors.primary.light} />
+          ) : null}
+          {isError ? (
+            <ThemedText style={{ color: AppColors.error.light }}>
+              An error occurred while fetching data.
+            </ThemedText>
+          ) : null}
+        </ThemedView>
+
+        <ThemedView style={styles.poweredBy}>
+          <ThemedText style={styles.poweredByText}>Powered by </ThemedText>
+
+          <Image
+            source={require("../../assets/images/cg_logo_color.png")}
+            style={{
+              width: 25,
+              height: 25,
+            }}
+          />
+        </ThemedView>
       </ThemedView>
     </ThemedView>
   );
@@ -86,26 +146,31 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  titleContainer: {
+  appTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 30,
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  poweredBy: {
+    marginTop: 20,
+    marginBottom: 20,
     flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+    justifyContent: "center",
+    width: "100%",
+    gap: 5,
+  },
+  poweredByText: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   assetsContainer: {
-    marginVertical: "5%",
-    paddingHorizontal: "5%",
+    marginVertical: 0,
+    paddingHorizontal: 0,
   },
   assetScrollView: {
     width: "100%",
-    height: "100%",
-  },
-  apiKeyMissing: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 10,
-    textAlign: "center",
-    color: "red",
   },
   assetsTitle: {
     fontSize: 24,
@@ -139,7 +204,7 @@ const styles = StyleSheet.create({
     flex: 3,
     fontWeight: "bold",
     fontSize: 18,
-    textAlign: "left",
+    textAlign: "center",
   },
   assetPriceHeaderText: {
     flex: 2,
@@ -151,11 +216,13 @@ const styles = StyleSheet.create({
     flex: 2,
     fontSize: 18,
     textAlign: "left",
+    flexDirection: "row",
+    gap: 5,
   },
   assetMcap: {
     flex: 3,
     fontSize: 18,
-    textAlign: "left",
+    textAlign: "center",
   },
   assetPrice: {
     flex: 2,

@@ -4,6 +4,8 @@ import { ThemedView } from "@/components/ThemedView";
 import ApiKeyInput from "@/components/ApiKeyInput";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
+import { ThemedText } from "@/components/ThemedText";
+import { ScrollView } from "react-native";
 
 export default function ConfigScreen() {
   return (
@@ -13,7 +15,20 @@ export default function ConfigScreen() {
         style={styles.background}
       />
 
-      <ApiKeyInput />
+      <ThemedView
+        style={{
+          alignItems: "flex-start",
+          marginTop: 20,
+        }}
+      >
+        <ThemedText style={{ fontSize: 24, fontWeight: "bold" }}>
+          Settings 🛠️
+        </ThemedText>
+      </ThemedView>
+
+      <ScrollView>
+        <ApiKeyInput />
+      </ScrollView>
     </ThemedView>
   );
 }
