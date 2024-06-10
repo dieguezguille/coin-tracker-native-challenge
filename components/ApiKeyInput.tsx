@@ -26,7 +26,8 @@ const ApiKeyInput: React.FC = () => {
       <ThemedText style={styles.inputLabel}>CoinGecko API Key</ThemedText>
 
       <TextInput
-        style={styles.input}
+        secureTextEntry
+        style={styles.secretInput}
         focusable
         placeholder="Enter your CoinGecko API Key"
         value={input}
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  input: {
+  secretInput: {
     borderColor: "#ccc",
     fontSize: 16,
     borderWidth: 1,

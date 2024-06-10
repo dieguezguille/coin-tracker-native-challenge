@@ -17,7 +17,7 @@ export default function SettingsScreen() {
 
       <ThemedView
         style={{
-          alignItems: "flex-start",
+          alignItems: "center",
           marginTop: 20,
         }}
       >
