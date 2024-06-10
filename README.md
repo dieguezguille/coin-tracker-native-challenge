@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# Coin Tracker Native Challenge
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This project is a React Native Expo application that lists the top assets traded on CoinGecko, sorted by Market Cap in descending order. It also includes a historical price graph for selected assets with the ability to change the asset and the time frame displayed.
 
-## Get started
+## Features
 
-1. Install dependencies
+- **Top Assets List**: Displays the top 10 assets by Market Cap in a scrollable view with pull-to-refresh functionality.
+- **Asset Price Data**: Shows the historical price of a selected asset with options to view data for 30, 60, and 90 days (limited by CG's Demo API tier)
+- **Responsive Design**: Optimized for mobile devices. Fast navigation, no unnecesary animations.
+- **Accessibility**: Includes accessibility improvements to ensure a better user experience for all users.
+
+## Technologies Used
+
+- **React Native**: For building the mobile application.
+- **Expo**: To streamline the development process.
+- **TypeScript**: For static typing and improved developer experience.
+- **CoinGecko API**: For fetching asset data and historical prices.
+- **React Native Chart Kit**: For rendering charts.
+- **Vanilla Styles**: For UI components.
+
+## Installation
+
+1. Clone the repository:
 
    ```bash
-   npm install
-   ```
+    git clone <https://github.com/dieguezguille/coin-tracker-native-challenge.git>
+    ```
 
-2. Start the app
+2. Navigate to the project directory:
 
    ```bash
-    npx expo start
-   ```
+    cd coin-tracker-native-challenge
+    ```
 
-In the output, you'll find options to open the app in a
+3. Install dependencies:
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+    ```bash
+    npm install
+    ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+4. Start the Expo server:
 
-## Get a fresh project
+    ```bash
+    npm run start
+    ```
 
-When you're ready, run:
+## Environment Variables
 
-```bash
-npm run reset-project
+Make sure to set up your environment variables correctly. Create a \`.env\` file in the root of your project and add the following:
+
+```
+EXPO_PUBLIC_COIN_GECKO_API_BASE_URL=https://api.coingecko.com/api/v3
+EXPO_PUBLIC_WALLET_CONNECT_PID='Your WalletConnect Project ID'
+EXPO_PUBLIC_WALLET_CONNECT_PNAME=Coin Tracker Native
+EXPO_PUBLIC_WALLET_CONNECT_PDESC=Track your favorite cryptocurrencies
+EXPO_PUBLIC_WALLET_CONNECT_PURL=https://guillermodieguez.com
+EXPO_PUBLIC_WALLET_CONNECT_PICON=https://avatars.githubusercontent.com/u/20884382
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Commit History and Code Comments
 
-## Learn more
+Throughout the project, clear commit messages were used to document the progress and changes made. Additionally, code comments are included to explain the logic and purpose of various functions and components.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Usage
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. **Configure API Key**: On the Settings Page, make sure to paste your CG API key. It will persist even if you close and reopen the app.
+2. **View Top Assets**: On the main screen, you will see a table listing the top 10 assets by market cap in descending order. The list has pull to refresh.
+3. **View Historical Prices**: Select an asset from the list to view its historical price graph. Use the interval buttons to switch between different periods.
+4. **Add to Watchlist**: Click on the Add to watchlist button to add an asset to favorites. This will persist even when closing and reopening the app.
+5. **Connect Wallet**: Click on the Connect Wallet button to open Web3 Modal and connect your favorite Web3 wallet to the app.
 
-## Join the community
+## Additional Features
 
-Join our community of developers creating universal apps.
+- **Unit Tests (WIP)**
+- **Integration Tests (WIP)**
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Contact
+
+For any inquiries, please contact:
+
+- **Email**: guillermodieguez (at) outlook (dot) com
