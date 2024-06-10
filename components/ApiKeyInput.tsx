@@ -19,6 +19,7 @@ const ApiKeyInput: React.FC = () => {
     if (apiKeyValue) {
       setInput(apiKeyValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

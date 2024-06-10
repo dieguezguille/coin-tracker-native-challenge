@@ -53,6 +53,14 @@ export default function AssetChartScreen() {
 
   const isInWatchlist = watchlist.find((storedId) => storedId === assetId);
 
+  const handleAssetPress = () => {
+    if (isInWatchlist) {
+      dispatch(removeAsset(assetId));
+    } else {
+      dispatch(addAsset(assetId));
+    }
+  };
+
   const { data, isLoading, isError, refetch } = useGetAssetChartDataByIdQuery({
     id: assetId ?? "bitcoin",
     currency: "usd",
@@ -112,11 +120,7 @@ export default function AssetChartScreen() {
 
         <TouchableOpacity
           style={styles.favoriteButtonContainer}
-          onPress={() => {
-            isInWatchlist
-              ? dispatch(removeAsset(assetId))
-              : dispatch(addAsset(assetId));
-          }}
+          onPress={handleAssetPress}
         >
           <ThemedText
             style={{

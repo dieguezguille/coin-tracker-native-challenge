@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 export interface WatchlistState {
-  watchlist: Array<string>;
+  watchlist: string[];
 }
 
 const initialState: WatchlistState = {

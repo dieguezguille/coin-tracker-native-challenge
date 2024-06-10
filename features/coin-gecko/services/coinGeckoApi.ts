@@ -39,9 +39,9 @@ export interface GetAssetsWithMarketData {
 }
 
 export interface CoinGeckoAssetChartData {
-  prices: Array<Array<number>>;
-  market_caps: Array<Array<number>>;
-  total_volumes: Array<Array<number>>;
+  prices: number[][];
+  market_caps: number[][];
+  total_volumes: number[][];
 }
 
 export interface GetAssetWithMarketDataByIdParams {
@@ -58,7 +58,7 @@ export const coinGeckoApi = createApi({
   }),
   endpoints: (builder) => ({
     getAssetsWithMarketData: builder.query<
-      Array<CoinGeckoAsset>,
+      CoinGeckoAsset[],
       GetAssetsWithMarketData
     >({
       query: ({
