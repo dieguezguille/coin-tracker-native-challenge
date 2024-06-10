@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Button,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -10,17 +11,29 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
 import { useLocalSearchParams } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
-import AssetChart from "./AssetChart";
+import AssetChart from "../AssetChart";
 import { Image } from "react-native";
 import intlNumberFormat from "@/utils/lib/intlNumberFormat";
 import { useGetAssetDataByIdQuery } from "@/features/coin-gecko/services/coinGeckoApi";
+import { useState } from "react";
 
 const now = Math.floor(Date.now() / 1000);
+
 const thirtyDaysAgo = now - 30 * 24 * 60 * 60;
+const sixtyDaysAgo = now - 60 * 24 * 60 * 60;
+const ninetyDaysAgo = now - 90 * 24 * 60 * 60;
+
+enum Interval {
+  THIRTY_DAYS = thirtyDaysAgo,
+  SIXTY_DAYS = sixtyDaysAgo,
+  NINETY_DAYS = ninetyDaysAgo,
+}
 
 export default function AssetChartScreen() {
   const router = useLocalSearchParams();
   const { id, name, symbol, mcap, price, change, image } = router;
+
+  const [interval, setInterval] = useState<Interval>(Interval.THIRTY_DAYS);
 
   const assetId = id as string;
   const assetName = name as string;
@@ -28,7 +41,7 @@ export default function AssetChartScreen() {
   const { data, isLoading, isError, refetch } = useGetAssetDataByIdQuery({
     id: assetId ?? "bitcoin",
     currency: "usd",
-    startAt: thirtyDaysAgo,
+    startAt: interval,
     endAt: now,
   });
 
@@ -43,6 +56,11 @@ export default function AssetChartScreen() {
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetch} />
         }
+        style={{
+          flex: 1,
+          gap: 20,
+          marginTop: 20,
+        }}
       >
         <ThemedView style={styles.assetTitleRow}>
           <ThemedText style={styles.assetName}>
@@ -55,11 +73,7 @@ export default function AssetChartScreen() {
           />
         </ThemedView>
 
-        <ThemedView
-          style={{
-            marginBottom: 20,
-          }}
-        >
+        <ThemedView>
           <ThemedText
             style={{
               fontSize: 16,
@@ -90,7 +104,6 @@ export default function AssetChartScreen() {
               style={{
                 fontSize: 16,
                 fontWeight: "bold",
-                marginBottom: 5,
               }}
             >
               Change (24h):{" "}
@@ -110,16 +123,52 @@ export default function AssetChartScreen() {
 
         {data && (
           <>
-            <ThemedText
+            <ThemedView
               style={{
-                fontSize: 18,
-                fontWeight: "bold",
-                marginBottom: 20,
-                textAlign: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 10,
               }}
             >
-              Price Chart
-            </ThemedText>
+              <ThemedText
+                style={{
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  textAlign: "left",
+                }}
+              >
+                Interval:
+              </ThemedText>
+
+              <Button
+                title="30 days"
+                onPress={() => setInterval(Interval.THIRTY_DAYS)}
+                color={
+                  interval === Interval.THIRTY_DAYS
+                    ? AppColors.primary.light
+                    : AppColors.secondary.light
+                }
+              />
+              <Button
+                title="60 days"
+                onPress={() => setInterval(Interval.SIXTY_DAYS)}
+                color={
+                  interval === Interval.SIXTY_DAYS
+                    ? AppColors.primary.light
+                    : AppColors.secondary.light
+                }
+              />
+              <Button
+                title="90 days"
+                onPress={() => setInterval(Interval.NINETY_DAYS)}
+                color={
+                  interval === Interval.NINETY_DAYS
+                    ? AppColors.primary.light
+                    : AppColors.secondary.light
+                }
+              />
+            </ThemedView>
 
             <AssetChart data={data} />
           </>

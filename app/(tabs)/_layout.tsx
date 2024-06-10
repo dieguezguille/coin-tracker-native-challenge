@@ -14,7 +14,6 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
       }}
-      backBehavior="initialRoute"
     >
       <Tabs.Screen
         name="index"
@@ -29,9 +28,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="config"
+        name="charts"
         options={{
-          title: "Config",
+          href: null,
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "trending-up" : "trending-up-outline"}
+              color={color}
+            />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          headerShown: false,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "settings" : "settings-outline"}

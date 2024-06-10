@@ -63,7 +63,7 @@ export const coinGeckoApi = createApi({
     >({
       query: ({
         page = 1,
-        perPage = 5,
+        perPage = 10,
         currency = "usd",
         orderBy = "market_cap_desc",
         precision = 2,

@@ -7,7 +7,7 @@ import { AppColors, Colors } from "@/constants/Colors";
 import { ThemedText } from "@/components/ThemedText";
 import { ScrollView } from "react-native";
 
-export default function ConfigScreen() {
+export default function SettingsScreen() {
   return (
     <ThemedView style={styles.layout}>
       <LinearGradient
