@@ -6,6 +6,7 @@ import {
   Image,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
@@ -25,6 +26,8 @@ import {
   Web3Modal,
 } from "@web3modal/ethers-react-native";
 import * as Clipboard from "expo-clipboard";
+import { BrowserProvider } from "ethers";
+import { useWeb3ModalProvider } from "@web3modal/ethers-react-native";
 
 const projectId = process.env.EXPO_PUBLIC_WALLET_CONNECT_PID ?? "";
 
@@ -70,8 +73,9 @@ export default function WatchlistScreen() {
   const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
   const { watchlist } = useSelector((state: RootState) => state.myAssets);
 
-  const { open, close } = useWeb3Modal();
-  const { address, chainId, isConnected } = useWeb3ModalAccount();
+  const { open } = useWeb3Modal();
+  const { address, isConnected } = useWeb3ModalAccount();
+  const { walletProvider } = useWeb3ModalProvider();
 
   const {
     data: assets,
@@ -83,6 +87,29 @@ export default function WatchlistScreen() {
   const watchListAssets = assets?.filter((asset) =>
     watchlist.includes(asset.id)
   );
+
+  const createTwoButtonAlert = (signature: string) =>
+    Alert.alert(
+      "Let's go!",
+      `You signed my welcome message :). Here's your signature: ${signature}`,
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        { text: "OK", onPress: () => console.log("OK Pressed") },
+      ]
+    );
+
+  const toTheMoon = async () => {
+    if (isConnected && walletProvider) {
+      const ethersProvider = new BrowserProvider(walletProvider);
+      const signer = await ethersProvider.getSigner();
+      const signature = await signer.signMessage("To the moon! 🚀🌕");
+      createTwoButtonAlert(signature);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -130,6 +157,26 @@ export default function WatchlistScreen() {
             </ThemedText>
           </TouchableOpacity>
         </ThemedView>
+
+        {isConnected && (
+          <ThemedView
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              paddingHorizontal: 20,
+            }}
+          >
+            <TouchableOpacity
+              style={styles.walletConnectButton}
+              onPress={toTheMoon}
+            >
+              <ThemedText style={styles.walletConnectText}>
+                Sign Sample Message
+              </ThemedText>
+            </TouchableOpacity>
+          </ThemedView>
+        )}
 
         <ThemedView style={styles.assetRowHeader}>
           <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
