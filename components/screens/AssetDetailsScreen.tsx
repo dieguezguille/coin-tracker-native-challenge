@@ -19,7 +19,7 @@ import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { addAsset, removeAsset } from "@/features/my-assets/myAssetsSlice";
+import { addAsset, removeAsset } from "@/features/watchlist/watchlistSlice";
 import intlNumberFormat from "@/utils/intlNumberFormat";
 import { useColorScheme } from "@/hooks/useColorScheme";
 

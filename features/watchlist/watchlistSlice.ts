@@ -1,15 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-export interface MyAssetsState {
+export interface WatchlistState {
   watchlist: Array<string>;
 }
 
-const initialState: MyAssetsState = {
+const initialState: WatchlistState = {
   watchlist: [],
 };
 
-export const myAssetsSlice = createSlice({
-  name: "myAssets",
+export const watchlistSlice = createSlice({
+  name: "watchlist",
   initialState,
   reducers: {
     addAsset: (state, action: PayloadAction<string>) => {
@@ -23,6 +23,6 @@ export const myAssetsSlice = createSlice({
   },
 });
 
-export const { addAsset, removeAsset } = myAssetsSlice.actions;
+export const { addAsset, removeAsset } = watchlistSlice.actions;
 
-export default myAssetsSlice.reducer;
+export default watchlistSlice.reducer;

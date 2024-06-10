@@ -1,5 +1,5 @@
 import coinGeckoReducer from "@/features/coin-gecko/coinGeckoSlice";
-import myAssetsReducer from "@/features/my-assets/myAssetsSlice";
+import myAssetsReducer from "@/features/watchlist/watchlistSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
