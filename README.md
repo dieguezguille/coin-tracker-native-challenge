@@ -7,7 +7,6 @@ This project is a React Native Expo application that lists the top assets traded
 - **Top Assets List**: Displays the top 10 assets by Market Cap in a scrollable view with pull-to-refresh functionality.
 - **Asset Price Data**: Shows the historical price of a selected asset with options to view data for 30, 60, and 90 days (limited by CG's Demo API tier)
 - **Responsive Design**: Optimized for mobile devices. Fast navigation, no unnecesary animations.
-- **Accessibility**: Includes accessibility improvements to ensure a better user experience for all users.
 
 ## Technologies Used
 
@@ -15,6 +14,9 @@ This project is a React Native Expo application that lists the top assets traded
 - **Expo**: To streamline the development process.
 - **TypeScript**: For static typing and improved developer experience.
 - **CoinGecko API**: For fetching asset data and historical prices.
+- **Redux Toolkit**: For state management and decoupling
+- **Redux Persist**: For persisting asset information and settings.
+- **Web3Modal (WalletConnect)** For all web3 related integrations.
 - **React Native Chart Kit**: For rendering charts.
 - **Vanilla Styles**: For UI components.
 
@@ -73,6 +75,7 @@ Throughout the project, clear commit messages were used to document the progress
 
 - **Unit Tests (WIP)**
 - **Integration Tests (WIP)**
+- **Accessibility (WIP)**
 
 ## Contact
 
