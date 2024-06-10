@@ -9,22 +9,28 @@ import {
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGeckoApi";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
 import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGeckoApi";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
-export default function HomeScreen() {
+export default function WatchlistScreen() {
   const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
+  const { watchlist } = useSelector((state: RootState) => state.myAssets);
+
   const {
     data: assets,
     isLoading,
     isError,
     refetch,
   } = useGetAssetsWithMarketDataQuery({});
+
+  const watchListAssets = assets?.filter((asset) =>
+    watchlist.includes(asset.id)
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,7 +51,7 @@ export default function HomeScreen() {
         style={styles.background}
       />
 
-      <ThemedText style={styles.appTitle}>Top 10 Coins 🏆</ThemedText>
+      <ThemedText style={styles.appTitle}>Coin Watchlist 🔍</ThemedText>
 
       <ThemedView style={styles.assetRowHeader}>
         <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
@@ -60,7 +66,7 @@ export default function HomeScreen() {
         }
       >
         <ThemedView style={styles.assetsContainer}>
-          {assets?.map((asset) => (
+          {watchListAssets?.map((asset) => (
             <Link
               key={asset.id}
               href={{
@@ -112,17 +118,6 @@ export default function HomeScreen() {
           </ThemedView>
         </ThemedView>
       </ScrollView>
-      <ThemedView style={styles.poweredBy}>
-        <ThemedText style={styles.poweredByText}>Powered by </ThemedText>
-
-        <Image
-          source={require("../../assets/images/cg_logo_color.png")}
-          style={{
-            width: 25,
-            height: 25,
-          }}
-        />
-      </ThemedView>
     </ThemedView>
   );
 }

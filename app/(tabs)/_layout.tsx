@@ -41,6 +41,19 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="watchlist"
+        options={{
+          title: "Watchlist",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "star" : "star-outline"}
+              color={color}
+            />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
