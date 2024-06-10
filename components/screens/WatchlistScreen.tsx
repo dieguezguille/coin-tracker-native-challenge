@@ -13,64 +13,34 @@ import { ThemedText } from "@/components/ThemedText";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
-import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import intlNumberFormat from "@/utils/intlNumberFormat";
 import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGeckoApi";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import "@walletconnect/react-native-compat";
 import {
-  createWeb3Modal,
-  defaultConfig,
   useWeb3Modal,
   useWeb3ModalAccount,
   Web3Modal,
 } from "@web3modal/ethers-react-native";
-import * as Clipboard from "expo-clipboard";
 import { BrowserProvider } from "ethers";
 import { useWeb3ModalProvider } from "@web3modal/ethers-react-native";
 
-const projectId = process.env.EXPO_PUBLIC_WALLET_CONNECT_PID ?? "";
-
-const providerMetadata = {
-  name: process.env.EXPO_PUBLIC_WALLET_CONNECT_PNAME ?? "",
-  description: process.env.EXPO_PUBLIC_WALLET_CONNECT_PDESC ?? "",
-  url: process.env.EXPO_PUBLIC_WALLET_CONNECT_PURL ?? "",
-  icons: [
-    process.env.EXPO_PUBLIC_WALLET_CONNECT_PICON ??
-      "https://avatars.githubusercontent.com/u/37784886",
-  ],
-  redirect: {
-    native: "YOUR_APP_SCHEME://",
-  },
-};
-
-const config = defaultConfig({
-  metadata: providerMetadata,
-  extraConnectors: [],
-});
-
-const mainnet = {
-  chainId: 1,
-  name: "Ethereum",
-  currency: "ETH",
-  explorerUrl: "https://etherscan.io",
-  rpcUrl: "https://cloudflare-eth.com",
-};
-
-createWeb3Modal({
-  projectId,
-  chains: [mainnet],
-  config,
-  enableAnalytics: true,
-  clipboardClient: {
-    setString: async (value: string) => {
-      await Clipboard.setStringAsync(value);
-    },
-  },
-});
+const messageSignedAlert = (signature: string) =>
+  Alert.alert(
+    "Let's go!",
+    `You signed my welcome message :). Here's your signature: ${signature}`,
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+      { text: "OK", onPress: () => console.log("OK Pressed") },
+    ]
+  );
 
 export default function WatchlistScreen() {
-  const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
   const { watchlist } = useSelector((state: RootState) => state.myAssets);
 
   const { open } = useWeb3Modal();
@@ -88,26 +58,12 @@ export default function WatchlistScreen() {
     watchlist.includes(asset.id)
   );
 
-  const createTwoButtonAlert = (signature: string) =>
-    Alert.alert(
-      "Let's go!",
-      `You signed my welcome message :). Here's your signature: ${signature}`,
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ]
-    );
-
   const toTheMoon = async () => {
     if (isConnected && walletProvider) {
       const ethersProvider = new BrowserProvider(walletProvider);
       const signer = await ethersProvider.getSigner();
       const signature = await signer.signMessage("To the moon! 🚀🌕");
-      createTwoButtonAlert(signature);
+      messageSignedAlert(signature);
     }
   };
 
@@ -118,10 +74,6 @@ export default function WatchlistScreen() {
 
     return () => clearInterval(interval);
   }, [refetch]);
-
-  useEffect(() => {
-    refetch();
-  }, [apiKeyValue]);
 
   return (
     <>

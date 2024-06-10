@@ -1,7 +1,7 @@
 import { LineChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 import { AppColors } from "@/constants/Colors";
-import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import intlNumberFormat from "@/utils/intlNumberFormat";
 import { CoinGeckoAssetChartData } from "@/features/coin-gecko/services/coinGeckoApi";
 
 interface AssetChartProps {

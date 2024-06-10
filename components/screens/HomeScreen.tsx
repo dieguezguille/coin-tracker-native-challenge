@@ -9,16 +9,13 @@ import {
 } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 import { useGetAssetsWithMarketDataQuery } from "@/features/coin-gecko/services/coinGeckoApi";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
-import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import intlNumberFormat from "@/utils/intlNumberFormat";
 
 export default function HomeScreen() {
-  const { apiKeyValue } = useSelector((state: RootState) => state.coinGecko);
   const {
     data: assets,
     isLoading,
@@ -33,10 +30,6 @@ export default function HomeScreen() {
 
     return () => clearInterval(interval);
   }, [refetch]);
-
-  useEffect(() => {
-    refetch();
-  }, [apiKeyValue]);
 
   return (
     <ThemedView style={styles.layout}>

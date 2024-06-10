@@ -20,7 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { addAsset, removeAsset } from "@/features/my-assets/myAssetsSlice";
-import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import intlNumberFormat from "@/utils/intlNumberFormat";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 const now = Math.floor(Date.now() / 1000);
