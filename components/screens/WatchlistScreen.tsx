@@ -97,15 +97,12 @@ export default function WatchlistScreen() {
   return (
     <>
       <Web3Modal />
-
       <ThemedView style={styles.layout}>
         <LinearGradient
           colors={[AppColors.primary.dark, Colors.dark.background]}
           style={styles.background}
         />
-
         <ThemedText style={styles.appTitle}>Coin Watchlist 🔍</ThemedText>
-
         <ThemedView style={styles.walletConnectContainer}>
           <TouchableOpacity
             style={styles.walletConnectButton}
@@ -121,7 +118,6 @@ export default function WatchlistScreen() {
             </ThemedText>
           </TouchableOpacity>
         </ThemedView>
-
         {isConnected && (
           <ThemedView style={styles.walletConnectContainer}>
             <TouchableOpacity
@@ -134,13 +130,11 @@ export default function WatchlistScreen() {
             </TouchableOpacity>
           </ThemedView>
         )}
-
         <ThemedView style={styles.assetRowHeader}>
           <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
           <ThemedText style={styles.assetMCapHeaderText}>Market Cap</ThemedText>
           <ThemedText style={styles.assetPriceHeaderText}>Price</ThemedText>
         </ThemedView>
-
         <ScrollView
           style={styles.assetScrollView}
           refreshControl={
@@ -182,7 +176,6 @@ export default function WatchlistScreen() {
                 </TouchableOpacity>
               </Link>
             ))}
-
             <ThemedView
               style={[
                 styles.loadingErrorContainer,

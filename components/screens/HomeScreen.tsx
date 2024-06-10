@@ -37,15 +37,12 @@ export default function HomeScreen() {
         colors={[AppColors.primary.dark, Colors.dark.background]}
         style={styles.background}
       />
-
       <ThemedText style={styles.appTitle}>Top 10 Coins 🏆</ThemedText>
-
       <ThemedView style={styles.assetRowHeader}>
         <ThemedText style={styles.assetNameHeaderText}>Coin</ThemedText>
         <ThemedText style={styles.assetMCapHeaderText}>Market Cap</ThemedText>
         <ThemedText style={styles.assetPriceHeaderText}>Price</ThemedText>
       </ThemedView>
-
       <ScrollView
         style={styles.assetScrollView}
         refreshControl={
@@ -87,7 +84,6 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </Link>
           ))}
-
           <ThemedView style={styles.loadingErrorContainer}>
             {isLoading ? (
               <ActivityIndicator size="large" color={AppColors.primary.light} />
@@ -102,7 +98,6 @@ export default function HomeScreen() {
       </ScrollView>
       <ThemedView style={styles.poweredBy}>
         <ThemedText style={styles.poweredByText}>Powered by </ThemedText>
-
         <Image
           source={require("../../assets/images/cg_logo_color.png")}
           style={styles.cgLogo}

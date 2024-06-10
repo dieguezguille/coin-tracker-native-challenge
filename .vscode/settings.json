@@ -1,5 +1,6 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
+  "typescript.tsserver.excludePaths": ["node_modules"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   }

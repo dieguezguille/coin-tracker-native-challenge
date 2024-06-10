@@ -13,11 +13,9 @@ export default function SettingsScreen() {
         colors={[AppColors.primary.dark, Colors.dark.background]}
         style={styles.background}
       />
-
       <ThemedView style={styles.headerContainer}>
         <ThemedText style={styles.headerText}>Settings 🛠️</ThemedText>
       </ThemedView>
-
       <ScrollView>
         <ApiKeyInput />
       </ScrollView>

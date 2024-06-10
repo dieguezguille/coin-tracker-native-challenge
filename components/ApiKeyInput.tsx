@@ -25,7 +25,6 @@ const ApiKeyInput: React.FC = () => {
   return (
     <View style={styles.container}>
       <ThemedText style={styles.inputLabel}>CoinGecko API Key</ThemedText>
-
       <TextInput
         secureTextEntry
         style={styles.secretInput}
@@ -34,7 +33,6 @@ const ApiKeyInput: React.FC = () => {
         value={input}
         onChangeText={setInput}
       />
-
       <View style={styles.actionButton}>
         <Button color="#ffffff" title="Save" onPress={saveApiKey} />
       </View>

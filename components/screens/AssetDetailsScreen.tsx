@@ -75,7 +75,6 @@ export default function AssetDetailsScreen() {
         colors={[AppColors.primary.dark, Colors.dark.background]}
         style={styles.background}
       />
-
       <TouchableOpacity
         style={styles.backButtonContainer}
         onPress={router.back}
@@ -87,7 +86,6 @@ export default function AssetDetailsScreen() {
         />
         <ThemedText style={styles.backButtonText}>Back</ThemedText>
       </TouchableOpacity>
-
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetch} />
@@ -101,7 +99,6 @@ export default function AssetDetailsScreen() {
           </ThemedText>
           <Image source={{ uri: image as string }} style={styles.assetImage} />
         </ThemedView>
-
         <TouchableOpacity
           style={styles.favoriteButtonContainer}
           onPress={handleAssetPress}
@@ -128,13 +125,11 @@ export default function AssetDetailsScreen() {
             name={isInWatchlist ? "star" : "star-outline"}
           />
         </TouchableOpacity>
-
         <ThemedView>
           <ThemedText style={styles.marketCapText}>
             Market Cap: {intlNumberFormat(Number(mcapValue))}
           </ThemedText>
           <ThemedText style={styles.priceText}>Price: {priceValue}</ThemedText>
-
           <ThemedView style={styles.changeRow}>
             <ThemedText style={styles.changeLabelText}>
               Change (24h):{" "}
@@ -152,7 +147,6 @@ export default function AssetDetailsScreen() {
             </ThemedText>
           </ThemedView>
         </ThemedView>
-
         {data && (
           <>
             <ThemedView style={styles.intervalRow}>
@@ -190,7 +184,6 @@ export default function AssetDetailsScreen() {
             <AssetChart data={data} />
           </>
         )}
-
         <ThemedView
           style={[
             styles.loadingErrorContainer,
