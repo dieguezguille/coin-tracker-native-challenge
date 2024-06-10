@@ -70,7 +70,7 @@ export const coinGeckoApi = createApi({
       }) =>
         `coins/markets?order=${orderBy}&per_page=${perPage}&precision=${precision}&vs_currency=${currency}&page=${page}`,
     }),
-    getAssetDataById: builder.query<
+    getAssetChartDataById: builder.query<
       CoinGeckoAssetChartData,
       GetAssetWithMarketDataByIdParams
     >({
@@ -80,5 +80,7 @@ export const coinGeckoApi = createApi({
   }),
 });
 
-export const { useGetAssetsWithMarketDataQuery, useGetAssetDataByIdQuery } =
-  coinGeckoApi;
+export const {
+  useGetAssetsWithMarketDataQuery,
+  useGetAssetChartDataByIdQuery,
+} = coinGeckoApi;

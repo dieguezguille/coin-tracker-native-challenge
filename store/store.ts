@@ -1,4 +1,5 @@
 import coinGeckoReducer from "@/features/coin-gecko/coinGeckoSlice";
+import myAssetsReducer from "@/features/my-assets/myAssetsSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -19,15 +20,26 @@ const persistCoinGeckoConfig = {
   storage: AsyncStorage,
 };
 
+const persistMyAssetsConfig = {
+  key: "myAssets",
+  storage: AsyncStorage,
+};
+
 const persistedCoinGeckoReducer = persistReducer(
   persistCoinGeckoConfig,
   coinGeckoReducer
+);
+
+const persistedMyAssetsReducer = persistReducer(
+  persistMyAssetsConfig,
+  myAssetsReducer
 );
 
 export const store = configureStore({
   reducer: {
     [coinGeckoApi.reducerPath]: coinGeckoApi.reducer,
     coinGecko: persistedCoinGeckoReducer,
+    myAssets: persistedMyAssetsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

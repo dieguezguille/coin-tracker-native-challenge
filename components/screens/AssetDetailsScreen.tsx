@@ -4,6 +4,7 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 
 import { ThemedView } from "@/components/ThemedView";
@@ -13,9 +14,13 @@ import { useLocalSearchParams } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import AssetChart from "../AssetChart";
 import { Image } from "react-native";
-import intlNumberFormat from "@/utils/lib/intlNumberFormat";
-import { useGetAssetDataByIdQuery } from "@/features/coin-gecko/services/coinGeckoApi";
+import { useGetAssetChartDataByIdQuery } from "@/features/coin-gecko/services/coinGeckoApi";
 import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { RootState } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { addAsset, removeAsset } from "@/features/my-assets/myAssetsSlice";
+import intlNumberFormat from "@/utils/lib/intlNumberFormat";
 
 const now = Math.floor(Date.now() / 1000);
 
@@ -30,15 +35,22 @@ enum Interval {
 }
 
 export default function AssetChartScreen() {
+  const dispatch = useDispatch();
   const router = useLocalSearchParams();
   const { id, name, symbol, mcap, price, change, image } = router;
 
-  const [interval, setInterval] = useState<Interval>(Interval.THIRTY_DAYS);
-
   const assetId = id as string;
   const assetName = name as string;
+  const mcapValue = mcap as string;
+  const priceValue = price as string;
+  const changeValue = change as string;
 
-  const { data, isLoading, isError, refetch } = useGetAssetDataByIdQuery({
+  const [interval, setInterval] = useState<Interval>(Interval.THIRTY_DAYS);
+  const { watchlist } = useSelector((state: RootState) => state.myAssets);
+
+  const isInWatchlist = watchlist.find((storedId) => storedId === assetId);
+
+  const { data, isLoading, isError, refetch } = useGetAssetChartDataByIdQuery({
     id: assetId ?? "bitcoin",
     currency: "usd",
     startAt: interval,
@@ -73,6 +85,40 @@ export default function AssetChartScreen() {
           />
         </ThemedView>
 
+        <TouchableOpacity
+          style={{
+            ...styles.favoriteButtonContainer,
+            marginBottom: 20,
+          }}
+          onPress={() => {
+            isInWatchlist
+              ? dispatch(removeAsset(assetId))
+              : dispatch(addAsset(assetId));
+          }}
+        >
+          <ThemedText
+            style={{
+              color: isInWatchlist
+                ? AppColors.primary.light
+                : AppColors.secondary.light,
+              flexDirection: "row",
+              gap: 5,
+              alignItems: "center",
+            }}
+          >
+            {isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
+          </ThemedText>
+          <Ionicons
+            size={25}
+            style={{
+              color: isInWatchlist
+                ? AppColors.primary.light
+                : AppColors.secondary.light,
+            }}
+            name={isInWatchlist ? "star" : "star-outline"}
+          />
+        </TouchableOpacity>
+
         <ThemedView>
           <ThemedText
             style={{
@@ -81,7 +127,7 @@ export default function AssetChartScreen() {
               marginBottom: 5,
             }}
           >
-            Market Cap: {intlNumberFormat(Number(mcap))}
+            Market Cap: {intlNumberFormat(Number(mcapValue))}
           </ThemedText>
           <ThemedText
             style={{
@@ -90,7 +136,7 @@ export default function AssetChartScreen() {
               marginBottom: 5,
             }}
           >
-            Price: {price}
+            Price: {priceValue}
           </ThemedText>
 
           <ThemedView
@@ -110,12 +156,12 @@ export default function AssetChartScreen() {
             </ThemedText>
             <ThemedText
               style={
-                Number(change) < 0
+                Number(changeValue) < 0
                   ? { color: AppColors.error.light }
                   : { color: AppColors.success.main }
               }
             >
-              {Number(change) < 0 ? "" : "+"}
+              {Number(changeValue) < 0 ? "" : "+"}
               {change}
             </ThemedText>
           </ThemedView>
@@ -199,6 +245,13 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 20,
     flex: 1,
+  },
+  favoriteButtonContainer: {
+    marginBottom: 20,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    gap: 5,
   },
   assetTitleRow: {
     marginBottom: 20,

@@ -9,7 +9,7 @@ const initialState: CoinGeckoState = {
   apiKeyValue: undefined,
 };
 
-export const counterSlice = createSlice({
+export const coinGeckoSlice = createSlice({
   name: "coinGecko",
   initialState,
   reducers: {
@@ -19,6 +19,6 @@ export const counterSlice = createSlice({
   },
 });
 
-export const { setApiKeyValue } = counterSlice.actions;
+export const { setApiKeyValue } = coinGeckoSlice.actions;
 
-export default counterSlice.reducer;
+export default coinGeckoSlice.reducer;
