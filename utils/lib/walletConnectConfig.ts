@@ -1,9 +1,8 @@
-import { createWeb3Modal, defaultConfig } from "@web3modal/ethers-react-native";
-import * as Clipboard from "expo-clipboard";
+import { defaultConfig } from "@web3modal/ethers-react-native";
 
-const projectId = process.env.EXPO_PUBLIC_WALLET_CONNECT_PID ?? "";
+export const wcProjectId = process.env.EXPO_PUBLIC_WALLET_CONNECT_PID ?? "";
 
-const providerMetadata = {
+export const wcProviderMetadata = {
   name: process.env.EXPO_PUBLIC_WALLET_CONNECT_PNAME ?? "",
   description: process.env.EXPO_PUBLIC_WALLET_CONNECT_PDESC ?? "",
   url: process.env.EXPO_PUBLIC_WALLET_CONNECT_PURL ?? "",
@@ -16,27 +15,15 @@ const providerMetadata = {
   },
 };
 
-const config = defaultConfig({
-  metadata: providerMetadata,
+export const wcConfig = defaultConfig({
+  metadata: wcProviderMetadata,
   extraConnectors: [],
 });
 
-const ethMainnet = {
+export const ethMainnet = {
   chainId: 1,
   name: "Ethereum",
   currency: "ETH",
   explorerUrl: "https://etherscan.io",
   rpcUrl: "https://cloudflare-eth.com",
 };
-
-createWeb3Modal({
-  projectId,
-  chains: [ethMainnet],
-  config,
-  enableAnalytics: true,
-  clipboardClient: {
-    setString: async (value: string) => {
-      await Clipboard.setStringAsync(value);
-    },
-  },
-});

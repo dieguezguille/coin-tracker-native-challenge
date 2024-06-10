@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {
-  StyleSheet,
   ScrollView,
   TouchableOpacity,
   Image,
@@ -19,12 +18,32 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import "@walletconnect/react-native-compat";
 import {
+  createWeb3Modal,
   useWeb3Modal,
   useWeb3ModalAccount,
   Web3Modal,
 } from "@web3modal/ethers-react-native";
 import { BrowserProvider } from "ethers";
 import { useWeb3ModalProvider } from "@web3modal/ethers-react-native";
+import styles from "@/styles/WatchlistScreenStyles";
+import {
+  ethMainnet,
+  wcConfig,
+  wcProjectId,
+} from "@/utils/lib/walletConnectConfig";
+import * as Clipboard from "expo-clipboard";
+
+createWeb3Modal({
+  projectId: wcProjectId,
+  chains: [ethMainnet],
+  config: wcConfig,
+  enableAnalytics: true,
+  clipboardClient: {
+    setString: async (value: string) => {
+      await Clipboard.setStringAsync(value);
+    },
+  },
+});
 
 const messageSignedAlert = (signature: string) =>
   Alert.alert(
@@ -87,14 +106,7 @@ export default function WatchlistScreen() {
 
         <ThemedText style={styles.appTitle}>Coin Watchlist 🔍</ThemedText>
 
-        <ThemedView
-          style={{
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            alignItems: "center",
-            paddingHorizontal: 20,
-          }}
-        >
+        <ThemedView style={styles.walletConnectContainer}>
           <TouchableOpacity
             style={styles.walletConnectButton}
             onPress={() => open()}
@@ -111,14 +123,7 @@ export default function WatchlistScreen() {
         </ThemedView>
 
         {isConnected && (
-          <ThemedView
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-start",
-              alignItems: "center",
-              paddingHorizontal: 20,
-            }}
-          >
+          <ThemedView style={styles.walletConnectContainer}>
             <TouchableOpacity
               style={styles.walletConnectButton}
               onPress={toTheMoon}
@@ -164,7 +169,7 @@ export default function WatchlistScreen() {
                   <ThemedView style={styles.assetName}>
                     <Image
                       source={{ uri: asset.image }}
-                      style={{ width: 25, height: 25 }}
+                      style={styles.assetImage}
                     />
                     <ThemedText>{asset.name}</ThemedText>
                   </ThemedView>
@@ -179,10 +184,10 @@ export default function WatchlistScreen() {
             ))}
 
             <ThemedView
-              style={{
-                marginVertical: isLoading || isError ? 20 : 0,
-                alignItems: "center",
-              }}
+              style={[
+                styles.loadingErrorContainer,
+                { marginVertical: isLoading || isError ? 20 : 0 },
+              ]}
             >
               {isLoading ? (
                 <ActivityIndicator
@@ -191,7 +196,7 @@ export default function WatchlistScreen() {
                 />
               ) : null}
               {isError ? (
-                <ThemedText style={{ color: AppColors.error.light }}>
+                <ThemedText style={styles.errorText}>
                   An error occurred while fetching data.
                 </ThemedText>
               ) : null}
@@ -202,120 +207,3 @@ export default function WatchlistScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  layout: {
-    backgroundColor: "transparent",
-    padding: 20,
-    paddingTop: 40,
-    flex: 1,
-  },
-  background: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-  },
-  appTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginTop: 20,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  walletConnectButton: {
-    marginVertical: 10,
-    marginBottom: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 5,
-    backgroundColor: AppColors.primary.light,
-    borderRadius: 10,
-    height: 40,
-  },
-  walletConnectText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    paddingHorizontal: 10,
-  },
-  poweredBy: {
-    marginVertical: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    width: "100%",
-    gap: 5,
-  },
-  poweredByText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  assetsContainer: {
-    marginVertical: 0,
-    paddingHorizontal: 0,
-  },
-  assetScrollView: {
-    width: "100%",
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  assetsTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  assetRowHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    marginHorizontal: 20,
-    borderBottomColor: AppColors.secondary.light,
-    borderBottomWidth: 1,
-  },
-  assetRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomColor: AppColors.secondary.light,
-    borderBottomWidth: 0.5,
-  },
-  assetNameHeaderText: {
-    flex: 2,
-    fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "left",
-  },
-  assetMCapHeaderText: {
-    flex: 3,
-    fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "center",
-  },
-  assetPriceHeaderText: {
-    flex: 2,
-    fontWeight: "bold",
-    fontSize: 18,
-    textAlign: "right",
-  },
-  assetName: {
-    flex: 2,
-    fontSize: 18,
-    textAlign: "left",
-    flexDirection: "row",
-    gap: 5,
-  },
-  assetMcap: {
-    flex: 3,
-    fontSize: 18,
-    textAlign: "center",
-  },
-  assetPrice: {
-    flex: 2,
-    fontSize: 18,
-    textAlign: "right",
-  },
-});

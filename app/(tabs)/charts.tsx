@@ -1,2 +1,2 @@
-import AssetChartScreen from "@/components/screens/AssetDetailsScreen";
-export default AssetChartScreen;
+import AssetDetailsScreen from "@/components/screens/AssetDetailsScreen";
+export default AssetDetailsScreen;
