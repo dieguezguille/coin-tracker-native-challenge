@@ -10,7 +10,7 @@ import {
 import { ThemedView } from "@/components/ThemedView";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppColors, Colors } from "@/constants/Colors";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ThemedText } from "@/components/ThemedText";
 import AssetChart from "../AssetChart";
 import { Image } from "react-native";
@@ -21,6 +21,7 @@ import { RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { addAsset, removeAsset } from "@/features/my-assets/myAssetsSlice";
 import intlNumberFormat from "@/utils/lib/intlNumberFormat";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 const now = Math.floor(Date.now() / 1000);
 
@@ -36,8 +37,10 @@ enum Interval {
 
 export default function AssetChartScreen() {
   const dispatch = useDispatch();
-  const router = useLocalSearchParams();
-  const { id, name, symbol, mcap, price, change, image } = router;
+  const colorScheme = useColorScheme();
+  const router = useRouter();
+  const params = useLocalSearchParams();
+  const { id, name, symbol, mcap, price, change, image } = params;
 
   const assetId = id as string;
   const assetName = name as string;
@@ -64,6 +67,29 @@ export default function AssetChartScreen() {
         style={styles.background}
       />
 
+      <TouchableOpacity
+        style={styles.backButtonContainer}
+        onPress={router.back}
+      >
+        <Ionicons
+          size={30}
+          style={{
+            color: Colors[colorScheme ?? "light"].icon,
+          }}
+          name="arrow-back"
+        />
+        <ThemedText
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            fontSize: 20,
+            gap: 5,
+          }}
+        >
+          Back
+        </ThemedText>
+      </TouchableOpacity>
+
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refetch} />
@@ -71,7 +97,6 @@ export default function AssetChartScreen() {
         style={{
           flex: 1,
           gap: 20,
-          marginTop: 20,
         }}
       >
         <ThemedView style={styles.assetTitleRow}>
@@ -86,10 +111,7 @@ export default function AssetChartScreen() {
         </ThemedView>
 
         <TouchableOpacity
-          style={{
-            ...styles.favoriteButtonContainer,
-            marginBottom: 20,
-          }}
+          style={styles.favoriteButtonContainer}
           onPress={() => {
             isInWatchlist
               ? dispatch(removeAsset(assetId))
@@ -245,6 +267,14 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
     padding: 20,
     flex: 1,
+  },
+  backButtonContainer: {
+    marginVertical: 40,
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    gap: 5,
   },
   favoriteButtonContainer: {
     marginBottom: 20,
